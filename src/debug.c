@@ -42,22 +42,113 @@ void putnum(long num, int base, int flag)
 
 static int vprintf(const char *fmt, va_list ap)
 {
+    //move the value of x1 to the addr of 0x00
+    asm volatile (
+        "mov x10, #0x0"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x1,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x2 to the addr of 0x10
+    asm volatile (
+        "mov x10, #0x10"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x2,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x3 to the addr of 0x20
+    asm volatile (
+        "mov x10, #0x20"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x3,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x4 to the addr of 0x30
+    asm volatile (
+        "mov x10, #0x30"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x4,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x5 to the addr of 0x40
+    asm volatile (
+        "mov x10, #0x40"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x5,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x6 to the addr of 0x50
+    asm volatile (
+        "mov x10, #0x50"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x6,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    //move the value of x7 to the addr of 0x60
+    asm volatile (
+        "mov x10, #0x60"   // 使用mov指令将立即数0x0存储到X10寄存器
+    );
+    asm volatile (
+        "str x7,[x10]"   // 使用str指令将x0寄存器的值存储到X10寄存器的地址中
+    );
+
+    int i = 0;
+
+    int addr = 0;
+
+
     for(; *fmt != '\0'; fmt++)
     {
         if(*fmt != '%'){
-            if (*fmt == '\n') uart_putc('\r');
+            if (*fmt == '\n')
+                uart_putc('\r');
             uart_putc(*fmt);
             continue;      /*终止本次for循环，即本次循环执行到这里不再往下执行，开始下一次for循环*/
+        }else{
+            i+=1;
         }
 
+        switch (i)
+        {
+            case 1:
+                addr = 0x00;
+                break;
+            case 2:
+                addr = 0x10;
+                break;
+            case 3:
+                addr = 0x20;
+                break;
+            case 4:
+                addr = 0x30;
+                break;
+            case 5:
+                addr = 0x40;
+                break;
+            case 6:
+                addr = 0x50;
+                break;
+            case 7:
+                addr = 0x60;
+                break;
+
+            default:
+                break;
+        }
         fmt++;
         switch(*fmt){
-        case 'd': putnum(va_arg(ap, int), 10, 1);break;
-        case 'o': putnum(va_arg(ap, unsigned int), 8, 0); break;
-        case 'u': putnum(va_arg(ap, unsigned int), 10, 0); break;
-        case 'x': putnum(va_arg(ap, unsigned int), 16, 0); break;
-        case 'c': uart_putc(va_arg(ap, int)); break;
-        case 's': uart_puts((char *)va_arg(ap,int)); break;
+        case 'd': putnum(va_arg(addr, int), 10, 1);break;
+        case 'o': putnum(va_arg(addr, unsigned int), 8, 0); break;
+        case 'u': putnum(va_arg(addr, unsigned int), 10, 0); break;
+        case 'x': putnum(va_arg(addr, unsigned int), 16, 0); break;
+        case 'c': uart_putc(va_arg(addr, int)); break;
+        case 's': uart_puts((char *)va_arg(addr,int)); break;
         default:
             uart_putc(*fmt);
             break;
